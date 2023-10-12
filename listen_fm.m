@@ -1,0 +1,36 @@
+function listen_fm(f_c, t_listen)
+    % Setup variables
+    fs = 2.4e5;             % Radio Sample rate
+    centerfreq = f_c;   % FM radio Frequency
+    Audio_fs = 48e3;       % Audio Sample Rate
+    kd = 75e3;              % Frequency Deviation 
+    ft = 5e-05;             % Filter time constant
+    frmlen = 16000;          % frame length
+    buf = 3840;             % Buffer size
+    T_audio = frmlen./fs;   % Audio frame time
+    T_stop = t_listen;
+
+    % Setup FM receiver and demodulator objects
+    radio = comm.SDRRTLReceiver('CenterFrequency', centerfreq, ...
+        'SampleRate', fs, ... 
+        'EnableTunerAGC', true, ...
+        'SamplesPerFrame', frmlen, ...
+        'OutputDataType', 'single');
+
+    FMDemod = comm.FMBroadcastDemodulator(...
+    'SampleRate', fs, ...
+    'FrequencyDeviation', kd, ...
+    'FilterTimeConstant', ft, ...
+    'AudioSampleRate', Audio_fs, ...
+    'PlaySound', true, ...
+    'BufferSize', buf, ...
+    'Stereo', true);
+
+    % Receive FM signal
+    t_current = 0;
+    while t_current < T_stop
+        x = radio();
+        FMDemod(x);
+        t_current = t_current + T_audio;
+    end
+end
