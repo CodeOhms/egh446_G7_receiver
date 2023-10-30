@@ -18,7 +18,7 @@ function [] = find_interferers(RF_band, IF, tuning_side)
     IMP_order_2 = zeros(3, 3); % per row [other IF,2*RF,2*LO] 
     IMP_order_3 = zeros(3, 6);
     spur_order_2 = zeros(3, 2);
-    spur_order_3 = zeros(3, 7);
+    spur_order_3 = zeros(3, 8);
     LO_freqs = zeros(3, 1);
     for chan_idx = 1:3
         chan_RF = test_RF_chans(chan_idx);
@@ -47,7 +47,8 @@ function [] = find_interferers(RF_band, IF, tuning_side)
             (LO_freqs(chan_idx,1) + IF)/2,...
             (LO_freqs(chan_idx,1) - IF)/2,...
             2*LO_freqs(chan_idx,1) + IF,...
-            2*LO_freqs(chan_idx,1) - IF];
+            2*LO_freqs(chan_idx,1) - IF,...
+            (3*IF + LO_freqs(chan_idx,1))/2];
 
         % Intermodulation Mixer Product signals (i.e. mixer output)
         IMP_order_2(chan_idx, 2:end) = [2*chan_RF, 2*LO_freqs(chan_idx,:)];
@@ -59,6 +60,7 @@ function [] = find_interferers(RF_band, IF, tuning_side)
     end
 
     spur_order_2
+    spur_order_3
     % Plot results
     for chan_idx = 1:3
         chan_RF = test_RF_chans(chan_idx);
@@ -69,7 +71,7 @@ function [] = find_interferers(RF_band, IF, tuning_side)
         hold on
         stem(chan_RF, 3, '-k')
         stem(spur_order_2(chan_idx,:), ones(1, 2), '-c')
-        stem(spur_order_3(chan_idx,:), ones(1, 7), '-b')
+        stem(spur_order_3(chan_idx,:), ones(1, 8), '-b')
         legend(sprintf("RF %g",chan_RF),...
             '2nd order spurious signals',...
             '3rd order spurious signals')
