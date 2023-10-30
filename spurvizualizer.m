@@ -1,5 +1,5 @@
 %% this section is for editing the mixer's data file
-edit('samplespur1.s2d');                    % this data file contains paramaters that adjust the mixer
+%edit('samplespur1.s2d');                    % this data file contains paramaters that adjust the mixer
 %% code to run
 clc;                                        % clear command line
 close all;                                  % close all figures
@@ -13,5 +13,6 @@ Pin = -10;                                  % Input power
 Fin = 2.5e9;                                % Input frequency
 figure
 plot(Mixer,'MIXERSPUR',CktIndex,Pin,Fin);
-yline(-25,'-','Spurious');                  %this creates the line on the graph
-yline(-55,'-','Image');                     %this creates the line on the graph
+yline(-25,'-','Spurious');                  % this creates the line on the graph
+yline(-55,'-','Image');                     % this creates the line on the graph
+xlim([0 5]);                                % this sets the x axis limits for the plot in GHz  
